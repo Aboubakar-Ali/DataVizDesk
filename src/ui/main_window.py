@@ -8,6 +8,10 @@ from pathlib import Path
 import sqlite3
 import os
 from base64 import b64encode
+from tkinter import Toplevel
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
 
 # Add the src directory to sys.path to enable inter-module imports
 root_dir = Path(__file__).resolve().parent.parent.parent
@@ -22,8 +26,20 @@ from data.spotify_data_manager import get_spotify_token, find_album_by_artist_an
 
 
 global_album_data = None
+visualisation_frame = None
 
 import requests
+
+def init_visualisation_frame(parent):
+    global visualisation_frame
+    if visualisation_frame is not None:
+        # Clear the existing frame
+        for widget in visualisation_frame.winfo_children():
+            widget.destroy()
+    else:
+        # Create the frame for the first time
+        visualisation_frame = Frame(parent)
+        visualisation_frame.pack(fill='both', expand=True)
 
 def fetch_album_tracks(album_id, access_token):
     endpoint = f"https://api.spotify.com/v1/albums/{album_id}/tracks"
@@ -38,8 +54,8 @@ def fetch_album_tracks(album_id, access_token):
 
 def search_album_data_callback(artist_name, album_name):
     global global_album_data
-    client_id = 'YOUR_CLIENT_ID'
-    client_secret = ' YOUR_SECRET_KEY'
+    client_id = 'your_client_id_here'
+    client_secret = 'your_client_secret_here'
     
     access_token = get_spotify_token(client_id, client_secret)
     
@@ -59,6 +75,9 @@ def search_album_data_callback(artist_name, album_name):
 
 # Fonction pour afficher les informations de l'album
 def display_album_info(album_data):
+
+    init_visualisation_frame(window)
+    
     artist_name = album_data['artists'][0]['name']  
     album_name = album_data['name']  
     album_cover_url = album_data['images'][0]['url'] 
@@ -75,6 +94,8 @@ def display_album_info(album_data):
     album_cover_label = Label(window, image=img_tk)
     album_cover_label.image = img_tk 
     album_cover_label.pack()
+
+    show_track_durations_graph(album_data['tracks'])
 
 # Window initialization
 def init_main_window():
@@ -143,6 +164,27 @@ def download_album_callback():
         conn.close()
         messagebox.showinfo("Success", "Album downloaded successfully.")
 
+def show_track_durations_graph(tracks):
+    # Triez les pistes par durée et sélectionnez les 5 plus longues
+    sorted_tracks = sorted(tracks, key=lambda x: x['duration_ms'], reverse=True)[:5]
+    track_names = [track['name'] for track in sorted_tracks]
+    track_durations = [track['duration_ms'] / 1000 / 60 for track in sorted_tracks]  # Convertissez en minutes
+
+    # Créez et affichez le graphique
+    fig = Figure(figsize=(5, 4), dpi=100)
+    plot = fig.add_subplot(1, 1, 1)
+    plot.bar(track_names, track_durations, color='skyblue')
+    plot.set_title('Top 5 Longest Tracks')
+    plot.set_ylabel('Duration (minutes)')
+    plot.set_xticklabels(track_names, rotation=30, ha='right')
+
+    # Créez une nouvelle fenêtre Tk pour le graphique
+    graph_window = Toplevel(window)
+    graph_window.title("Track Durations")
+    canvas = FigureCanvasTkAgg(fig, master=graph_window)
+    canvas.draw()
+    canvas.get_tk_widget().pack()
+
 
 def create_tables():
     conn = sqlite3.connect(db_path)
@@ -183,9 +225,6 @@ def create_tables():
 
     conn.commit()
     conn.close()
-
-    
-
 
 
 def add_widgets(window):
