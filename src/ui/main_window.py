@@ -12,6 +12,7 @@ from tkinter import Toplevel
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
+from tkinter import PhotoImage
 
 # Add the src directory to sys.path to enable inter-module imports
 root_dir = Path(__file__).resolve().parent.parent.parent
@@ -75,46 +76,39 @@ def search_album_data_callback(artist_name, album_name):
 
 # Fonction pour afficher les informations de l'album
 def display_album_info(album_data):
-
+    # Initialisation de la frame de visualisation si nécessaire
     init_visualisation_frame(window)
     
+    # Informations sur l'artiste et l'album
     artist_name = album_data['artists'][0]['name']  
     album_name = album_data['name']  
     album_cover_url = album_data['images'][0]['url'] 
-
-    # Display the artist and album name
-    artist_album_label = Label(window, text=f"Artist: {artist_name}, Album: {album_name}")
+    
+    # Affichage du nom de l'artiste et de l'album
+    artist_album_label = Label(visualisation_frame, text=f"Artiste : {artist_name}, Album : {album_name}")
     artist_album_label.pack()
-
-    # Download and display the album cover
+    
+    # Téléchargement et affichage de la couverture de l'album
     response = requests.get(album_cover_url)
     img_data = BytesIO(response.content)
     img = Image.open(img_data)
     img_tk = ImageTk.PhotoImage(img)
-    album_cover_label = Label(window, image=img_tk)
-    album_cover_label.image = img_tk 
-    album_cover_label.pack()
+    album_cover_label = Label(visualisation_frame, image=img_tk)
+    album_cover_label.image = img_tk  # Conservez une référence
+    album_cover_label.pack(side='left', padx=200, pady=0)
 
-    show_track_durations_graph(album_data['tracks'])
 
 # Window initialization
 def init_main_window():
     global window
     window = tk.Tk()
     window.title("DataVizDesk")
-    window.geometry("800x600")
+    window.geometry("1000x600")
     window.resizable(False, False)
 
+    # Définir le fond d'écran de la fenêtre en marron
+    window.configure(background='#92a8d1')
    
-    menu_bar = Menu(window)
-    file_menu = Menu(menu_bar, tearoff=0)
-    file_menu.add_command(label="Open...")
-    file_menu.add_command(label="Save")
-    file_menu.add_separator()
-    file_menu.add_command(label="Exit", command=window.quit)
-    menu_bar.add_cascade(label="File", menu=file_menu)
-
-    window.config(menu=menu_bar)
 
     # wigdets
     add_widgets(window)
@@ -174,16 +168,20 @@ def show_track_durations_graph(tracks):
     fig = Figure(figsize=(5, 4), dpi=100)
     plot = fig.add_subplot(1, 1, 1)
     plot.bar(track_names, track_durations, color='skyblue')
-    plot.set_title('Top 5 Longest Tracks')
-    plot.set_ylabel('Duration (minutes)')
+    plot.set_title('Top 5 des pistes les plus longues')
+    plot.set_ylabel('Durée (minutes)')
     plot.set_xticklabels(track_names, rotation=30, ha='right')
 
-    # Créez une nouvelle fenêtre Tk pour le graphique
-    graph_window = Toplevel(window)
-    graph_window.title("Track Durations")
-    canvas = FigureCanvasTkAgg(fig, master=graph_window)
+    # Affichez le graphique dans la frame de visualisation
+    canvas = FigureCanvasTkAgg(fig, master=visualisation_frame)
     canvas.draw()
-    canvas.get_tk_widget().pack()
+    canvas.get_tk_widget().pack(fill='both', expand=True)
+
+    # Retirez l'image de couverture pour faire de la place au graphique
+    visualisation_frame
+    for widget in visualisation_frame.winfo_children():
+        if isinstance(widget, Label):
+            widget.pack_forget()
 
 
 def create_tables():
@@ -226,6 +224,30 @@ def create_tables():
     conn.commit()
     conn.close()
 
+def display_stats(tracks):
+    global visualisation_frame
+
+    for widget in visualisation_frame.winfo_children():
+        widget.destroy()
+
+    show_track_durations_graph(tracks)
+
+def stats_button_callback():
+    if global_album_data:
+        display_stats(global_album_data['tracks'])
+    else:
+        messagebox.showerror("Erreur", "Aucune donnée d'album à afficher.")
+
+def clear_database():
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    tables = ['artists', 'albums', 'songs']
+    for table in tables:
+        cursor.execute(f"DELETE FROM {table}")
+    conn.commit()
+    conn.close()
+    messagebox.showinfo("Info", "La base de données a été vidée.")
+
 
 def add_widgets(window):
     control_frame = Frame(window)
@@ -242,12 +264,17 @@ def add_widgets(window):
     album_entry = Entry(control_frame)
     album_entry.pack(side='left', fill='x', expand=True)
 
-    search_button = Button(control_frame, text="Search Album", command=lambda: search_album_data_callback(artist_entry.get(), album_entry.get()))
-    search_button.pack(side='right')
+    clear_button = Button(control_frame, text="Clear Database", command=clear_database)
+    clear_button.pack(side='right')
 
-    # Ajout du bouton de téléchargement
     download_button = Button(control_frame, text="Download Album", command=download_album_callback)
     download_button.pack(side='right')
+
+    stats_button = Button(control_frame, text="Statistiques", command=stats_button_callback)
+    stats_button.pack(side='right')
+
+    search_button = Button(control_frame, text="Album", command=lambda: search_album_data_callback(artist_entry.get(), album_entry.get()))
+    search_button.pack(side='right')
 
 if __name__== "__main__":
     create_tables() 
