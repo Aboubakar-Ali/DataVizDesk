@@ -16,6 +16,6 @@ def extract_metadata_and_first_chapter(filepath):
     
     return title, author, first_chapter
 
-filepath = 'Data Explorration/livre.txt'
-title, author, first_chapter = extract_metadata_and_first_chapter(filepath)
-print(f"Titre: {title}\nAuteur: {author}\nPremier Chapitre (Aperçu): {first_chapter}")
+# filepath = 'Data Explorration/livre.txt'
+# title, author, first_chapter = extract_metadata_and_first_chapter(filepath)
+# print(f"Titre: {title}\nAuteur: {author}\nPremier Chapitre (Aperçu): {first_chapter}")

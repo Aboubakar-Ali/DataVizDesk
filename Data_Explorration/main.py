@@ -32,7 +32,6 @@ class BookManagementApp(tk.Tk):
         result_window.title("Résultats de l'Extraction")
         result_window.geometry("400x300")  # Ajustez la taille selon le besoin
 
-        # Bouton Menu en haut
         tk.Button(result_window, text="Menu", command=result_window.destroy).pack(side=tk.TOP, fill=tk.X)
 
         # Zone de texte avec défilement pour les résultats
@@ -42,7 +41,6 @@ class BookManagementApp(tk.Tk):
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         text_area.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-         # Insertion des résultats dans la zone de texte
         text_area.insert(tk.END, f"Titre: {title}\nAuteur: {author}\nPremier Chapitre (Aperçu): {first_chapter}")
 
     def download_image(self):

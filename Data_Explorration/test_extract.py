@@ -3,7 +3,7 @@ from extract import extract_metadata_and_first_chapter
 
 class TestExtract(unittest.TestCase):
     def test_extract_metadata_and_first_chapter(self):
-        filepath = 'Explorration/livre.txt'
+        filepath = 'Data Explorration/livre.txt'
         title, author, first_chapter = extract_metadata_and_first_chapter(filepath)
         
         # Vérification
