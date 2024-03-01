@@ -1,13 +1,13 @@
 import unittest
 import sys
-sys.path.insert(0, 'c:/D/Projet/School/DataVizDesk/Data_Explorration')
+sys.path.insert(0, 'c:/D/Projet/School/DataVizDesk/Data_Exploration')
 from extract import extract_metadata_and_first_chapter
 
 
 
 class TestExtract(unittest.TestCase):
     def test_extract_metadata_and_first_chapter(self):
-        filepath = 'Data_Explorration/livre.txt'
+        filepath = 'Data_Exploration/livre.txt'
         title, author, first_chapter = extract_metadata_and_first_chapter(filepath)
         
         # VVérification

@@ -39,7 +39,7 @@ def generate_report(window):
 
     title, author = extract_metadata(book_filepath)
     
-    save_directory = 'Data Explorration/Doc'
+    save_directory = 'Data_Exploration/Doc'
     if not os.path.exists(save_directory):
         os.makedirs(save_directory)
     doc_path = os.path.join(save_directory, 'rapport.docx')

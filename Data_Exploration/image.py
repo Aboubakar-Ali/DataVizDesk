@@ -32,7 +32,7 @@ def download_and_show_image(window):
             img_cropped = img_resized.crop((start_x, start_y, start_x + crop_width, start_y + crop_height))
 
             # Définir le chemin de sauvegarde et créer le dossier s'il n'existe pas
-            save_directory = 'Data Explorration/Image'
+            save_directory = 'Data_Exploration/Image'
             if not os.path.exists(save_directory):
                 os.makedirs(save_directory)
             save_path = os.path.join(save_directory, 'downloaded_image.jpg')

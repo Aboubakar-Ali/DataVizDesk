@@ -13,7 +13,7 @@ def rotate_and_save_logo(window):
             try:
                 with Image.open(logo_path) as logo:
                     rotated_logo = logo.rotate(angle, expand=True)
-                    save_path = 'Data Explorration/Image/Photo1.png'
+                    save_path = 'Data_Exploration/Image/Photo1.png'
                     rotated_logo.save(save_path)
                     return True, "Le logo a été pivoté et enregistré avec succès."
             except Exception as e:
