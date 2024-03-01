@@ -18,13 +18,9 @@ from tkinter import PhotoImage
 root_dir = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(root_dir / 'src'))
 
-
 db_path = 'my_database.db'
-
-
 # Import
 from data.spotify_data_manager import get_spotify_token, find_album_by_artist_and_name
-
 
 global_album_data = None
 visualisation_frame = None
