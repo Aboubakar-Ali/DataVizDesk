@@ -11,10 +11,10 @@ Build a desktop application that fetches data from the internet in JSON format, 
 ### NB: we use Spotify's API to set up a music album download system
 
 ### Features:
-        Data Download and Storage: Download data from spotify in JSON format and store it in a SQLite database.
-        Database Management: Clear database content and manage data downloads.
-        UI Customization: Customize application appearance, including colors and fonts.
-        Data Aggregation and Visualization: Implement functionality to display aggregated data and visualize data through graphs within the main application window.
+* Data Download and Storage: Download data from spotify in JSON format and store it in a SQLite database.
+* Database Management: Clear database content and manage data downloads.
+* UI Customization: Customize application appearance, including colors and fonts.
+* Data Aggregation and Visualization: Implement functionality to display aggregated data and visualize data through graphs within the main application window.
 
 ## Part 2: Document and Graphics Management
 
@@ -22,10 +22,11 @@ Build a desktop application that fetches data from the internet in JSON format, 
 Enhance the application's capabilities to export Word documents, create custom graphics, and manage images.
 
 ### Features:
-        Content Download and Extraction: Download text from a book and extract specific details like title, author, and the first chapter.
-        Text Analysis: Analyze and visualize the word count distribution in the first chapter's paragraphs.
-        Image Processing: Download, crop, resize, and manipulate images to integrate them into the application.
-        Word Document Creation: Generate a Word document containing the book's title, images, author details, and custom header styles. Include a graphical representation of the text analysis and a detailed description.
+* Content Download and Extraction: Download text from a book and extract specific details like title, author, and the first chapter.
+* Text Analysis: Analyze and visualize the word count distribution in the first chapter's paragraphs.
+* Image Processing: Download, crop, resize, and manipulate images to integrate them into the application.
+* Word Document Creation: Generate a Word document containing the book's title, images, author details, and custom header styles. 
+* Include a graphical representation of the text analysis and a detailed description.
 
 
 ## General Notes
